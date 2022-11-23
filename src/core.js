@@ -2,22 +2,62 @@
 function isInteger(n) {}
 
 //Напишите функцию, которая возвращает массив четных чисел от 2 до 20 включительно
-function even() {}
+function even() {
+    let arr = [2];
+
+    for (let i = 1; i < 10; i++) {
+        arr[i] = arr[i - 1] + 2;
+    }
+    return arr;
+}
 
 //Напишите функцию, считающую сумму чисел до заданного используя цикл
-function sumTo(n) {}
+function sumTo(n) {
+    let sum = 0;
+    while (n--) {
+        sum = sum + n + 1;
+    }
+    return sum;
+}
 
 //Напишите функцию, считающую сумму чисел до заданного используя рекурсию
-function recSumTo(n) {}
+function recSumTo(n) {
+    if (n === 1) {
+        return 1;
+    }
+    return recSumTo(n - 1) + n;
+}
 
 //Напишите функцию, считающую факториал заданного числа
-function factorial(n) {}
+function factorial(n) {
+    if (n === 1) {
+        return 1;
+    }
+    return factorial(n - 1) * n;
+}
 
 //Напишите функцию, которая определяет, является ли число двойкой, возведенной в степень
-function isBinary(n) {}
+function isBinary(n) {
+    if (n === 1 || n === 2) {
+        return true;
+    }
+    let two = 2;
+    while (two < n) {
+        two = two << 1;
+    }
+    if (two == n) {
+        return true;
+    }
+    return false;
+}
 
 //Напишите функцию, которая находит N-е число Фибоначчи
-function fibonacci(n) {}
+function fibonacci(n) {
+    if (n == 1 || n == 2) {
+        return 1;
+    }
+    return fibonacci(n - 2) + fibonacci(n - 1);
+}
 
 /** Напишите функцию, которая принимает начальное значение и функцию операции
  * и возвращает функцию - выполняющую эту операцию.
@@ -30,7 +70,24 @@ function fibonacci(n) {}
  * console.log(sumFn(5)) - 15
  * console.log(sumFn(3)) - 18
  */
-function getOperationFn(initialValue, operatorFn) {}
+function getOperationFn(initialValue, operatorFn) {
+    if (arguments.length === 1 && isFinite(initialValue)) {
+        return function (newValue) {
+            return initialValue;
+        };
+    }
+
+    if (
+        arguments.length === 2 &&
+        isFinite(initialValue) &&
+        typeof operatorFn === 'function'
+    ) {
+        return function (newValue) {
+            initialValue = operatorFn(initialValue, newValue);
+            return initialValue;
+        };
+    }
+}
 
 /**
  * Напишите функцию создания генератора арифметической последовательности.
@@ -48,7 +105,12 @@ function getOperationFn(initialValue, operatorFn) {}
  * console.log(generator()); // 7
  * console.log(generator()); // 9
  */
-function sequence(start, step) {}
+function sequence(start = 0, step = 1) {
+    start -= step;
+    return function generator() {
+        return (start += step);
+    };
+}
 
 /**
  * Напишите функцию deepEqual, которая принимает два значения
@@ -64,7 +126,34 @@ function sequence(start, step) {}
  * deepEqual({arr: [22, 33], text: 'text'}, {arr: [22, 33], text: 'text'}) // true
  * deepEqual({arr: [22, 33], text: 'text'}, {arr: [22, 3], text: 'text2'}) // false
  */
-function deepEqual(firstObject, secondObject) {}
+function deepEqual(a, b) {
+    if (Object.keys(a).length !== Object.keys(b).length) return false;
+    for (let key in a) {
+        for (let key in b) {
+            if (
+                a[key] instanceof Object &&
+                b[key] instanceof Object &&
+                !Array.isArray(a[key]) &&
+                !Array.isArray(b[key])
+            ) {
+                return deepEqual(a[key], b[key]);
+            } else if (Array.isArray(a[key]) && Array.isArray(b[key])) {
+                const arr1 = a[key];
+                const arr2 = b[key];
+                if (arr1.join('') === arr2.join('')) {
+                    continue;
+                }
+            }
+            if (a[key] !== b[key]) {
+                return false;
+            }
+            if (key !== key) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 module.exports = {
     isInteger,
